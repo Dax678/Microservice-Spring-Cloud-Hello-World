@@ -1,13 +1,12 @@
-package com.example.api.core.review;
+package com.example.api.composite.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Review {
+public class RecommendationSummary {
     private final Long id;
     private final String author;
-    private final String subject;
-    private final String serviceAddress;
+    private final int rate;
 }

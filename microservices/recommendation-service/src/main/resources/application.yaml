@@ -1,6 +1,6 @@
-spring.application.name: product-service
+spring.application.name: recommendation-service
 
-server.port: 7001
+server.port: 7002
 
 logging:
   level:

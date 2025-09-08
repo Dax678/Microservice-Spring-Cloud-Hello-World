@@ -29,13 +29,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.example.microservices</groupId>
-            <artifactId>util</artifactId>
+            <groupId>com.example.microservices.api</groupId>
+            <artifactId>api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.example.microservices</groupId>
-            <artifactId>api</artifactId>
+            <groupId>com.example.microservices.util</groupId>
+            <artifactId>util</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -57,6 +57,18 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
