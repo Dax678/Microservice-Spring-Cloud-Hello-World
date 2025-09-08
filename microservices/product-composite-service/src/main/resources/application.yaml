@@ -1,5 +1,31 @@
 spring.application.name: product-composite-service
 
+springdoc:
+  swagger-ui.path: /openapi/swagger-ui.html
+  api-docs.path: /openapi/v3/api-docs
+  packages-to-scan: com.example.microservices.composite.product
+  paths-to-match: /**
+
+api:
+  common:
+    version: 1.0.0
+    title: API Hello World
+    description: Description of API Hello World
+    termsOfService: TERMS OF SERVICE
+    license: MY LICENSE
+    licenseUrl: LICENSE URL
+    externalDocDesc: WIKI PAGE
+    externalDocUrl: WIKI URL
+    contact:
+      name: CONTACT NAME
+      url: CONTACT URL
+      email: CONTACT EMAIL
+
+  responseCodes:
+    ok.description: OK
+    badRequest.description: Bad Request, invalid of the request. See response message for more information
+    notFound.description: Not Found. See response message for more information
+
 server.port: 7000
 
 app:
