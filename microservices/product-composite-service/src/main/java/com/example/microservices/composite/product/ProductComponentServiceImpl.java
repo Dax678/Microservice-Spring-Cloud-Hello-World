@@ -5,7 +5,6 @@ import com.example.api.core.product.Product;
 import com.example.api.core.recommendation.Recommendation;
 import com.example.api.core.review.Review;
 import com.example.util.http.ServiceUtil;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @RestController
 public class ProductComponentServiceImpl implements ProductCompositeService {
     private final ServiceUtil serviceUtil;
-    private ProductCompositeIntegration productCompositeIntegration;
+    private final ProductCompositeIntegration productCompositeIntegration;
 
     @Autowired
     public ProductComponentServiceImpl(ServiceUtil serviceUtil, ProductCompositeIntegration productCompositeIntegration) {
@@ -49,8 +48,8 @@ public class ProductComponentServiceImpl implements ProductCompositeService {
         String recommendationAddress = (recommendationList != null && !recommendationList.isEmpty()) ? recommendationList.getFirst().getServiceAddress() : "";
         String reviewAddress = (reviewList != null && !reviewList.isEmpty()) ? reviewList.getFirst().getServiceAddress() : "";
 
-        ServiceAddresses serviceAddreses = new ServiceAddresses(serviceAddress,productAddress,recommendationAddress,reviewAddress);
+        ServiceAddresses serviceAddresses = new ServiceAddresses(serviceAddress,productAddress,recommendationAddress,reviewAddress);
 
-        return new ProductAggregate(productId, name, weight, recommendationSummaries, reviewSummaries, serviceAddreses);
+        return new ProductAggregate(productId, name, weight, recommendationSummaries, reviewSummaries, serviceAddresses);
     }
 }

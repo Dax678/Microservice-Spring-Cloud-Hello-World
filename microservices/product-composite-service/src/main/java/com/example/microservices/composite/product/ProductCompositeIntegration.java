@@ -7,6 +7,8 @@ import com.example.api.core.recommendation.RecommendationService;
 import com.example.api.core.review.Review;
 import com.example.api.core.review.ReviewService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Component
 public class ProductCompositeIntegration implements ProductService, RecommendationService, ReviewService {
+    Logger logger = LoggerFactory.getLogger(ProductCompositeIntegration.class);
+
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -39,9 +43,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
-        this.productServiceUrl = "https://" + productServiceHost + ":" + productServicePort + "/product/";
-        this.recommendationServiceUrl = "https://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation/";
-        this.reviewServiceUrl = "https://" + reviewServiceHost + ":" + reviewServicePort + "/review/";
+        this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product/";
+        this.recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation/";
+        this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review/";
     }
 
     @Override
@@ -52,15 +56,31 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     @Override
     public List<Recommendation> getRecommendations(Long id) {
-        String url =  recommendationServiceUrl + "/product/" + id;
-        List<Recommendation> recommendations = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Recommendation>>() {}).getBody();
+        String url =  recommendationServiceUrl + "product/" + id;
+
+        logger.debug("Calling recommendation api on URL: {}", url);
+
+        List<Recommendation> recommendations = restTemplate
+                .exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Recommendation>>() {})
+                .getBody();
+
+        logger.debug("getRecommendations: {} for product with id: {}", recommendations, id);
+
         return recommendations;
     }
 
     @Override
     public List<Review> getReviews(Long id) {
-        String url = reviewServiceUrl + "/product/" + id;
-        List<Review> reviews = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Review>>() {}).getBody();
+        String url = reviewServiceUrl + "product/" + id;
+
+        logger.debug("Calling reviews api on URL: {}", url);
+
+        List<Review> reviews = restTemplate
+                .exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Review>>() {})
+                .getBody();
+
+        logger.debug("getReviews: {} for product with id: {}", reviews, id);
+
         return reviews;
     }
 }

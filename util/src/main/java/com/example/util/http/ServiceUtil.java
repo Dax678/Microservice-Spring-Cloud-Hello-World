@@ -1,11 +1,45 @@
 package com.example.util.http;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Component
 public class ServiceUtil {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceUtil.class);
+
+    private final String port;
+    private String serviceAddress = null;
+
+    public ServiceUtil(@Value("${server.port}") String port) {
+        this.port = port;
+    }
 
     public String getServiceAddress() {
-        return null;
+        if(serviceAddress == null) {
+            serviceAddress = findMyHostname() + "/" + findMyIpAddress() + ":" + port;
+        }
+        return serviceAddress;
+    }
+
+    private String findMyHostname() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String findMyIpAddress() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
