@@ -2,10 +2,20 @@ spring.application.name: review-service
 
 server.port: 7003
 
+spring.jpa.hibernate.ddl-auto: update
+
+spring.datasource:
+  url: jdbc:mysql://localhost/review-db
+  username: user
+  password: pwd
+  hikari:
+    initialization-fail-timeout: 60000
+
 logging:
   level:
     root: INFO
     com.example.microservices: DEBUG
+
 
 ---
 spring:
@@ -15,3 +25,6 @@ spring:
 
 server:
   port: 8080
+
+spring.datasource:
+  url: jdbc:mysql://mysql/review-db

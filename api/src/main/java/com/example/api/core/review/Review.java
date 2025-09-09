@@ -2,12 +2,16 @@ package com.example.api.core.review;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class Review {
-    private final Long id;
-    private final String author;
-    private final String subject;
-    private final String serviceAddress;
+    private Long productId;
+    private Long reviewId;
+    private String author;
+    private String subject;
+    private String content;
+    private String serviceAddress;
 }

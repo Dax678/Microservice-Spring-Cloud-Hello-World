@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -43,20 +44,38 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
-        this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product/";
-        this.recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation/";
-        this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review/";
+        this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
+        this.recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendation";
+        this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
     }
 
     @Override
     public Product getProduct(Long productId) {
-        String url = productServiceUrl + productId;
+        String url = productServiceUrl + "/" + productId;
         return restTemplate.getForObject(url, Product.class);
     }
 
     @Override
+    public Product createProduct(Product product) {
+        try {
+            return restTemplate.postForObject(productServiceUrl, product, Product.class);
+        } catch (HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode(), e.getResponseBodyAsString());
+        }
+    }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        try {
+            restTemplate.delete(productServiceUrl + "/" + productId);
+        } catch (HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode());
+        }
+    }
+
+    @Override
     public List<Recommendation> getRecommendations(Long id) {
-        String url =  recommendationServiceUrl + "product/" + id;
+        String url =  recommendationServiceUrl + "/product/" + id;
 
         logger.debug("Calling recommendation api on URL: {}", url);
 
@@ -70,8 +89,26 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
     @Override
+    public Recommendation createRecommendation(Recommendation recommendation) {
+        try {
+            return restTemplate.postForObject(recommendationServiceUrl, recommendation, Recommendation.class);
+        } catch(HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode(), e.getResponseBodyAsString());
+        }
+    }
+
+    @Override
+    public void deleteRecommendations(Long productId) {
+        try {
+            restTemplate.delete(recommendationServiceUrl + "?productId=" + productId);
+        } catch(HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode());
+        }
+    }
+
+    @Override
     public List<Review> getReviews(Long id) {
-        String url = reviewServiceUrl + "product/" + id;
+        String url = reviewServiceUrl + "/product/" + id;
 
         logger.debug("Calling reviews api on URL: {}", url);
 
@@ -82,5 +119,23 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         logger.debug("getReviews: {} for product with id: {}", reviews, id);
 
         return reviews;
+    }
+
+    @Override
+    public Review createReview(Review review) {
+        try {
+            return restTemplate.postForObject(reviewServiceUrl, review, Review.class);
+        }  catch(HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode(), e.getResponseBodyAsString());
+        }
+    }
+
+    @Override
+    public void deleteReviews(Long productId) {
+        try {
+            restTemplate.delete(reviewServiceUrl + "?productId=" + productId);
+        }  catch(HttpClientErrorException e) {
+            throw new HttpClientErrorException(e.getStatusCode());
+        }
     }
 }

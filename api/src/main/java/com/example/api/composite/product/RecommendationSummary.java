@@ -6,7 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class RecommendationSummary {
-    private final Long id;
+    private final Long recommendationId;
     private final String author;
     private final int rate;
+    private final String content;
 }

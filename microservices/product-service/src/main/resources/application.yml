@@ -2,16 +2,19 @@ spring.application.name: product-service
 
 server.port: 7001
 
+spring.data.mongodb:
+  host: localhost
+  port: 27017
+  database: product-db
+
 logging:
   level:
     root: INFO
     com.example.microservices: DEBUG
 
 ---
-spring:
-  config:
-    activate:
-      on-profile: docker
+spring.config.activate.on-profile: docker
 
-server:
-  port: 8080
+server.port: 8080
+
+spring.data.mongodb.host: mongodb
